@@ -5,6 +5,7 @@
 package DAL;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +23,11 @@ public class ParentDAO extends DBContext{
 "where p.ParentId=?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                
+            }
         } catch (SQLException ex) {
             Logger.getLogger(ParentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
