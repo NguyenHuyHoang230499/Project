@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <servlet>
+        <servlet-name>parent</servlet-name>
+        <servlet-class>controller.parent</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>teacher</servlet-name>
+        <servlet-class>controller.teacher</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>parent</servlet-name>
+        <url-pattern>/parent</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>teacher</servlet-name>
+        <url-pattern>/teacher</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+</web-app>
