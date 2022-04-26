@@ -108,4 +108,88 @@ public class StaffDAO extends DBContext{
             Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     return null;}
+    public int UpdateTeacher(Teacher t){
+        String sql = "UPDATE [Teacher]\n" +
+"   SET [TeacherName] = ?\n" +
+"      ,[TeacherSex] = ?\n" +
+"      ,[TeacherPhone] = ?\n" +
+"      ,[TeacherAddress] = ?\n" +
+"      ,[Subject] = ?\n" +
+" WHERE TeacherId=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, t.getTeacherName());
+            statement.setBoolean(2, t.isTeacherSex());
+            statement.setString(3, t.getTeacherPhone());
+            statement.setString(4, t.getTeacherAddress());
+            statement.setString(5, t.getSubject());
+            statement.setInt(6, t.getTeacherId());
+            int check = statement.executeUpdate();
+            return check;
+        } catch (SQLException ex) {
+            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    public int UpdateParent(Parent p){
+        String sql ="UPDATE [Parent]\n" +
+"   SET [ParentName] = ?\n" +
+"      ,[ParentSex] = ?\n" +
+"      ,[ParentPhone] = ?\n" +
+"      ,[ParentAddress] = ?\n" +
+" WHERE ParentId =?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, p.getParentName());
+            statement.setBoolean(2, p.isParentSex());
+            statement.setString(3, p.getParentPhone());
+            statement.setString(4, p.getParentAddress());
+            statement.setInt(5, p.getParentId());
+            int check =statement.executeUpdate();
+            return check;
+        } catch (SQLException ex) {
+            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    public Student getStudent(int id){
+        String sql ="select * from Student\n" +
+"where StudentId = ?";
+        try {
+            PreparedStatement s = connection.prepareStatement(sql);
+            s.setInt(1, id);
+            ResultSet rs = s.executeQuery();
+            if(rs.next()){
+                Student st = new Student();
+                st.setStudentId(rs.getInt("StudentId"));
+                st.setStudentName(rs.getString("StudentName"));
+                st.setStudentSex(rs.getBoolean("StudentSex"));
+                st.setStudentDate(rs.getDate("StudentBirth"));
+                return st;
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    public int UpdateStudent(Student st){
+        String sql ="UPDATE [Student]\n" +
+"   SET [StudentName] = ?\n" +
+"      ,[StudentSex] = ?\n" +
+"      ,[StudentBirth] =?\n" +
+" WHERE StudentId =?";
+        try {
+            PreparedStatement s= connection.prepareStatement(sql);
+            s.setString(1, st.getStudentName());
+            s.setBoolean(2, st.isStudentSex());
+            s.setDate(3, st.getStudentDate());
+            s.setInt(4, st.getStudentId());
+            int check = s.executeUpdate();
+            return check;
+        } catch (SQLException ex) {
+            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
 }

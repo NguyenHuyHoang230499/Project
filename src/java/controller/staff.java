@@ -4,14 +4,21 @@
  */
 package controller;
 
+import DAL.ParentDAO;
 import DAL.StaffDAO;
+import DAL.TeacherDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Date;
+import java.util.ArrayList;
+import model.Parent;
 import model.Staff;
+import model.Student;
+import model.Teacher;
 
 /**
  *
@@ -57,6 +64,10 @@ public class staff extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+       StaffDAO sdao = new StaffDAO();
+       TeacherDAO tdao = new TeacherDAO();
+       ParentDAO pdao = new ParentDAO();
         int id,tid,pid,sid;
        try{
            id=Integer.parseInt(request.getParameter("id"));
@@ -66,24 +77,38 @@ public class staff extends HttpServlet {
        }
        try{
            tid=Integer.parseInt(request.getParameter("tid"));
+                  Teacher teacher = tdao.getTeacher(tid);
+       request.setAttribute("teacher", teacher);
+       request.setAttribute("tid", tid);
        }
        catch(Exception ex){
            tid = 0;
        }
        try{
            pid=Integer.parseInt(request.getParameter("pid"));
+           Parent parent = pdao.getParent(pid);
+           request.setAttribute("parent", parent);
+           request.setAttribute("pid", pid);
        }
        catch (Exception ex){
            pid=0;
        }
        try{
            sid=Integer.parseInt(request.getParameter("sid"));
+           Student student = sdao.getStudent(sid);
+           request.setAttribute("student", student);
+           request.setAttribute("sid", sid);
        }
        catch(Exception ex){
            sid =0;
        }
-       StaffDAO sdao = new StaffDAO();
        Staff staff =sdao.getStaff(id);
+       ArrayList<Teacher> teachers =sdao.getAllTeacher();
+       ArrayList<Parent> parents = sdao.getAllParent();
+       ArrayList<Student> students = sdao.getAllStudents();
+       request.setAttribute("students", students);
+       request.setAttribute("parents", parents);
+       request.setAttribute("teachers", teachers);
        request.setAttribute("staff", staff);
        request.getRequestDispatcher("staff.jsp").forward(request, response);
     }
@@ -99,7 +124,76 @@ public class staff extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        PrintWriter out = response.getWriter();
+        StaffDAO sdao = new StaffDAO();
+        String check = request.getParameter("check");
+        if(check.equals("teacher")){
+            try{
+                Teacher t = new Teacher();
+                t.setTeacherId(Integer.parseInt(request.getParameter("TId")));
+                t.setTeacherName(request.getParameter("TName"));
+                if(request.getParameter("TSex").equals("true")){
+                    t.setTeacherSex(true);
+                }
+                else t.setTeacherSex(false);
+                t.setTeacherPhone(request.getParameter("TPhone"));
+                t.setTeacherAddress(request.getParameter("TAddress"));
+                t.setSubject(request.getParameter("TSubject"));
+                int up = sdao.UpdateTeacher(t);
+                if(up==1){
+                    out.println("Update successful"); return;
+                }
+                else out.print("Update fail!"); return;
+            }
+            catch(Exception ex){
+               out.print("Update fail!");
+               return;
+            }
+        }
+        if(check.equals("parent")){
+            try{
+                Parent p = new Parent();
+                p.setParentId(Integer.parseInt(request.getParameter("PId")));
+                p.setParentName(request.getParameter("PName"));
+                if(request.getParameter("PSex").equals("true")){
+                    p.setParentSex(true);
+                }else p.setParentSex(false);
+                p.setParentPhone(request.getParameter("PPhone"));
+                p.setParentAddress(request.getParameter("PAddress"));
+                int up = sdao.UpdateParent(p);
+                if(up==1){
+                    out.println("Update successful"); return;
+                }
+                else out.print("Update fail!"); return;
+            }
+            catch(Exception ex){
+               out.print("Update fail!");
+               return;
+            }
+        }
+        if(check.equals("student")){
+            try{
+                Student s = new Student();
+                s.setStudentId(Integer.parseInt(request.getParameter("SId")));
+                s.setStudentName(request.getParameter("SName"));
+                if(request.getParameter("SSex").equals("true")){
+                    s.setStudentSex(true);
+                }
+                else{
+                    s.setStudentSex(false);
+                }
+                s.setStudentDate(Date.valueOf(request.getParameter("SDate")));
+                int up = sdao.UpdateStudent(s);
+                if(up==1){
+                    out.println("Update successful"); return;
+                }
+                else out.print("Update fail!"); return;
+            }
+            catch(Exception ex){
+               out.print("Update fail!");
+               return;
+            }
+        }
     }
 
     /**
