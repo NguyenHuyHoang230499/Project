@@ -59,13 +59,28 @@
                                 </tr>
                                 <c:forEach items="${s.getStudentMarks()}" var="sm">
                                     <tr>
-                                    <td>${sm.getSubject()}</td>
+                                    <td><a href="parent?pid=${p.getParentId()}&sid=${s.getStudentId()}&subject=${sm.getSubject()}">${sm.getSubject()}</a></td>
                                     <td>${sm.getSmalTest()}</td>
                                     <td>${sm.getMidTest()}</td>
                                     <td>${sm.getFinalTest()}</td>
                                 </tr>
                                 </c:forEach>
                             </table>  
+                    </c:if>
+                </div>
+                <div>
+                    <c:set value="${requestScope.teacher}" var="t"/>
+                    <c:if test="${t!=null}" >
+                        <h2>Teacher information:</h2>
+                        <h3>Teacher name:${t.getTeacherName()}</h3>
+                        <c:if test="${t.isTeacherSex()==true}">
+                <h3>Sex:Male</h3>
+            </c:if>
+                <c:if test="${t.isTeacherSex()!=true}">
+                <h3>Sex:Female</h3>
+            </c:if>
+                <h3>Phone number:${t.getTeacherPhone()}</h3>
+                <h3>Address:${t.getTeacherAddress()}</h3>
                     </c:if>
                 </div>
     </body>

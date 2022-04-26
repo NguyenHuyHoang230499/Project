@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import model.Parent;
 import model.Student;
 import model.StudentMark;
 import model.Teacher;
@@ -75,10 +76,30 @@ public class teacher extends HttpServlet {
         catch( Exception ex){
              cid=0;
         }
-        ArrayList<Student> students = tdao.getStudentsByClass(cid);
-        request.setAttribute("students", students);
+        int sid;
+        try{
+            sid = Integer.parseInt(request.getParameter("sid"));
+        }
+        catch( Exception ex){
+             sid=0;
+        }
         Teacher teacher = tdao.getTeacher(tid);
         request.setAttribute("teacher", teacher);
+        Parent CParent = new Parent();
+        CParent = null;
+        ArrayList<Student> students = tdao.getStudentsByClass(cid);
+        for (Student s : students) {
+            StudentMark sm = tdao.getStudentMark(s.StudentId,teacher.getSubject() );
+            s.setStudentMark(sm);
+            if(s.getStudentId()==sid){
+                CParent = s.getStudentParent();
+            }
+        }
+        request.setAttribute("CParent", CParent);
+        request.setAttribute("students", students);
+        request.setAttribute("CTeacher", tid);
+        request.setAttribute("CClass", cid);
+        request.setAttribute("CStudent", sid);
         request.getRequestDispatcher("teacher.jsp").forward(request, response);
     }
 
@@ -93,7 +114,31 @@ public class teacher extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int cid = Integer.parseInt(request.getParameter("cid"));
+        int tid = Integer.parseInt(request.getParameter("tid"));
+         TeacherDAO tdao = new TeacherDAO();
+         Teacher t = tdao.getTeacher(tid);
+         ArrayList<Student> students = tdao.getStudentsByClass(cid);
+         for (Student s : students) {
+             String get = String.valueOf(s.getStudentId());
+            String[] values = request.getParameterValues(get);
+             try{
+                 int check = tdao.UpdateStudentMark(s.getStudentId(), Integer.parseInt(values[0]), Integer.parseInt(values[1]), Integer.parseInt(values[2]),t.getSubject() );
+                 if(check == 0){
+                     PrintWriter out = response.getWriter();
+                 out.print("Update fail!");
+                 return;
+                 }
+             }
+             catch(Exception ex){
+                 PrintWriter out = response.getWriter();
+                 out.print("Update fail!");
+                 return;
+             }
+        }
+        PrintWriter out = response.getWriter();
+                 out.print("Update success!");
+        
     }
 
     /**

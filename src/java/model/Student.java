@@ -19,6 +19,16 @@ public class Student {
     public ArrayList<StudentMark> studentMarks;
     public Class StudentClass;
     public Parent StudentParent;
+    public StudentMark studentMark;
+
+    public StudentMark getStudentMark() {
+        return studentMark;
+    }
+
+    public void setStudentMark(StudentMark studentMark) {
+        this.studentMark = studentMark;
+    }
+    
 
     public Parent getStudentParent() {
         return StudentParent;

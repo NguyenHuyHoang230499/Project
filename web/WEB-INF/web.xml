@@ -8,6 +8,10 @@
         <servlet-name>teacher</servlet-name>
         <servlet-class>controller.teacher</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>staff</servlet-name>
+        <servlet-class>controller.staff</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>parent</servlet-name>
         <url-pattern>/parent</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>teacher</servlet-name>
         <url-pattern>/teacher</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>staff</servlet-name>
+        <url-pattern>/staff</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

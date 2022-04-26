@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Parent;
 import model.Student;
+import model.Teacher;
 
 /**
  *
@@ -49,6 +50,31 @@ public class ParentDAO extends DBContext{
             }
             p.setStudents(students);
             return p;
+        } catch (SQLException ex) {
+            Logger.getLogger(ParentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    public Teacher getTeacherBySubject(String subject,int cid){
+        String sql ="select * from Teacher t\n" +
+"inner join ClassTeacher ct \n" +
+"on t.TeacherId = ct.TeacherId\n" +
+"where ct.ClassId = ? and t.Subject =?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, cid);
+            statement.setString(2, subject);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                Teacher t = new Teacher();
+                t.setTeacherId(rs.getInt("TeacherId"));
+                t.setTeacherName(rs.getString("TeacherName"));
+                t.setTeacherSex(rs.getBoolean("TeacherSex"));
+                t.setTeacherPhone(rs.getString("TeacherPhone"));
+                t.setTeacherAddress(rs.getString("TeacherAddress"));
+                t.setSubject(rs.getString("Subject"));
+                return t;
+            }
         } catch (SQLException ex) {
             Logger.getLogger(ParentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }

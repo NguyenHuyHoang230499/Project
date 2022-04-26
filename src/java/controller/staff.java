@@ -4,24 +4,20 @@
  */
 package controller;
 
-import DAL.ParentDAO;
-import DAL.StudentDAO;
-import com.oracle.wls.shaded.org.apache.bcel.generic.AALOAD;
+import DAL.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Parent;
-import model.Student;
-import model.Teacher;
+import model.Staff;
 
 /**
  *
  * @author senan
  */
-public class parent extends HttpServlet {
+public class staff extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +36,10 @@ public class parent extends HttpServlet {
 //            out.println("<!DOCTYPE html>");
 //            out.println("<html>");
 //            out.println("<head>");
-//            out.println("<title>Servlet parent</title>");            
+//            out.println("<title>Servlet staff</title>");            
 //            out.println("</head>");
 //            out.println("<body>");
-//            out.println("<h1>Servlet parent at " + request.getContextPath() + "</h1>");
+//            out.println("<h1>Servlet staff at " + request.getContextPath() + "</h1>");
 //            out.println("</body>");
 //            out.println("</html>");
 //        }
@@ -61,35 +57,35 @@ public class parent extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       int pid = Integer.parseInt(request.getParameter("pid"));
-       int sid;
-       Student s = new Student();
+        int id,tid,pid,sid;
        try{
-           StudentDAO sdao = new StudentDAO();
-            sid= Integer.parseInt(request.getParameter("sid"));
-             s= sdao.getStudent(sid);
+           id=Integer.parseInt(request.getParameter("id"));
+       }
+       catch(Exception exception){
+           id=0;
+       }
+       try{
+           tid=Integer.parseInt(request.getParameter("tid"));
        }
        catch(Exception ex){
-           s = null;
+           tid = 0;
        }
-       ParentDAO pdao = new ParentDAO();
-       
-       Parent p = pdao.getParent(pid);
-       String subject ;
        try{
-           subject = request.getParameter("subject");
-           Teacher teacher = pdao.getTeacherBySubject(subject, s.getStudentClass().getClassId());
-           request.setAttribute("teacher", teacher);
+           pid=Integer.parseInt(request.getParameter("pid"));
+       }
+       catch (Exception ex){
+           pid=0;
+       }
+       try{
+           sid=Integer.parseInt(request.getParameter("sid"));
        }
        catch(Exception ex){
-           subject ="";
+           sid =0;
        }
-       
-       
-       request.setAttribute("student", s);
-       request.setAttribute("parent", p);
-       request.getRequestDispatcher("parent.jsp").forward(request, response);
-       
+       StaffDAO sdao = new StaffDAO();
+       Staff staff =sdao.getStaff(id);
+       request.setAttribute("staff", staff);
+       request.getRequestDispatcher("staff.jsp").forward(request, response);
     }
 
     /**

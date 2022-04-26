@@ -116,5 +116,31 @@ public class TeacherDAO extends DBContext {
         }
         return null;
     }
+    public int UpdateStudentMark(int sid,int SmalTest,int Midtest,int FinalTest,String subject){
+        if(SmalTest <0||SmalTest >10||Midtest <0|| Midtest>10||FinalTest<0||FinalTest>10){
+            return 0;
+        }
+        String sql ="UPDATE [StudentMark]\n" +
+"   SET \n" +
+"      [SmalTest] = ?\n" +
+"      ,[MidTest] = ?\n" +
+"      ,[FinalTest] = ?\n" +
+" WHERE StudentId = ? and Subject =?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, SmalTest);
+            statement.setInt(2, Midtest);
+            statement.setInt(3, FinalTest);
+            statement.setInt(4, sid);
+            statement.setString(5, subject);
+            int check = statement.executeUpdate();
+            return check;
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(TeacherDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
 
 }
